@@ -45,19 +45,32 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
+
+  # Call `byebug` anywhere in the code to stop execution and get a debugger console
+  gem "pry-rails"
+  # Call `binding.pry` anywhere in the code to stop execution and get a debugger console
+  gem "pry-byebug"
+
+  # Use RSpec for testing [https://github.com/rspec/rspec-rails]
   gem "rspec-rails", "~> 6.0.0"
+
+  # Use FactoryBot to generate test data [https://github.com/thoughtbot/factory_bot_rails]
+  gem "factory_bot_rails"
+  # Use Faker to generate fake data [https://github.com/faker-ruby/faker]
+  gem "faker"
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 
-  gem "pry-rails"
-  gem "pry-byebug"
-
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+end
+
+group :test do
+  gem "database_cleaner-active_record"
 end
