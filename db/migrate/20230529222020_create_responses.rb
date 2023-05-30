@@ -7,7 +7,7 @@ class CreateResponses < ActiveRecord::Migration[7.0]
       t.integer :anxiety_score
       t.integer :substance_use_score
       t.text :results
-      
+
       t.timestamps
     end
   end

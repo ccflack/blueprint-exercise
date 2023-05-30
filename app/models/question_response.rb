@@ -1,18 +1,10 @@
-class QuestionResponse < ApplicationRecord
+class QuestionResponse < ActiveRecord::Base
   belongs_to :question
-  belongs_to :response
-  has_one :user, through: :response
+  belongs_to :screener_response
+  has_one :user, through: :screener_response
 
-  enum answer: {
-    not_at_all: 0,
-    several_days: 1,
-    more_than_half_the_days: 2,
-    nearly_every_day: 3
-  }
+  validates :question, presence: true
+  validates :screener_response, presence: true
 
-  validates :answer, presence: true, inclusion: { in: answers.keys }
-
-  def human_answer
-    answer.humanize
-  end
+  delegate :domain, to: :question
 end

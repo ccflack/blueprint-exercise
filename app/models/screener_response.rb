@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-class Response < ApplicationRecord
+class ScreenerResponse < ApplicationRecord
   belongs_to :user
+  belongs_to :screener
   has_many :question_responses, dependent: :destroy
 
   validates :user, presence: true
@@ -16,6 +17,8 @@ class Response < ApplicationRecord
   def update_domain_scores!
     set_running_scores
     total_running_scores
+
+    @running_scores.symbolize_keys!
 
     update!(
       depression_score: @running_scores[:depression],
@@ -41,7 +44,7 @@ class Response < ApplicationRecord
   def total_running_scores
     question_responses.each do |q_response|
       @running_scores[q_response.domain] += q_response.answer
-    end.symbolize_keys!
+    end
   end
 
   def send_phq9?
