@@ -27,6 +27,9 @@ gem "stimulus-rails"
 # Bundle and process CSS [https://github.com/rails/cssbundling-rails]
 gem "cssbundling-rails"
 
+# Use Tailwind CSS for styling [https://tailwindcss.com/docs/rails]
+gem "tailwindcss-rails", "~> 2.0"
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
@@ -48,10 +51,12 @@ group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 
+  gem "pry-rails"
+  gem "pry-byebug"
+
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
 end
-
