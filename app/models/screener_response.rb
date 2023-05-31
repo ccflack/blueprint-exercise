@@ -5,6 +5,8 @@ class ScreenerResponse < ApplicationRecord
   belongs_to :screener
   has_many :question_responses, dependent: :destroy
 
+  accepts_nested_attributes_for :question_responses
+
   validates :user, presence: true
 
   def assess!
