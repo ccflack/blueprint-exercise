@@ -1,0 +1,17 @@
+<div class="hero min-h-screen bg-base-200">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <h1 class="text-5xl font-bold">Please choose a screener to start:</h1>
+      <p class="py-6">Welcome to Blueprint! Choose one of the following screeners to continue.</p>
+      <% @screeners.each do |screener| %>
+        <div class="card-actions justify-center">
+          <%= link_to screener_path(screener),
+                      title: screener.name,
+                      class: "btn btn-block" do %>
+            <%= screener.full_name %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
