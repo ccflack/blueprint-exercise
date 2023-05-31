@@ -51,7 +51,7 @@ RSpec.describe "ScreenerResponses", type: :request do
     end
 
     it "returns a results array" do
-      post "/screener_responses/assess",
+      post "/api/v1/screener_responses/assess",
            params: {
              screener_id: -1, # We hardcode this sample screener's id to -1 in the seeds file
              answers: answers_payload
