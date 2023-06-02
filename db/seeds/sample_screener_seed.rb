@@ -1,7 +1,7 @@
 # The assess action assumes an existing screener with the following data.
 
 # Create a screener
-screener = Screener.create!(
+screener = Screener.find_or_create_by!(
   id: -1,
   name: "BPDS",
   disorder: "Cross-Cutting",
@@ -33,7 +33,7 @@ answers_arr = [
 ]
 
 answers = answers_arr.map do |answer_attribute|
-  Answer.create!(answer_attribute)
+  Answer.find_or_create_by!(answer_attribute)
 end
 
 # Create battery of questions
@@ -81,24 +81,28 @@ questions_arr = [
 ]
 
 questions = questions_arr.map do |question_attribute|
-  Question.create!(question_attribute)
+  Question.find_or_create_by!(question_attribute)
 end
 
 # Create a section
-section = Section.new({
+section = Section.find_or_initialize_by({
   "type": "standard",
   "title": "During the past TWO (2) WEEKS, how much (or how often) have you been bothered by the following problems?",
 })
 
 # Associates questions and answers with section
-section.questions = questions
-section.answers = answers
-section.save!
+unless section.persisted?
+  section.questions = questions
+  section.answers = answers
+  section.save!
+end
 
 # Create a content
-content = Content.new(display_name: "BDS")
+content = Content.find_or_initialize_by(display_name: "BDS")
 
 # Associates content to screener and section to content
-content.sections = [section]
-content.screener = screener
-content.save!
+unless content.persisted?
+  content.sections = [section]
+  content.screener = screener
+  content.save!
+end
