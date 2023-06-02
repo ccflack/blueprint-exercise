@@ -24,11 +24,7 @@ bundle exec rspec
 
 ###### Services (job queues, cache servers, search engines, etc.)
 
-- Posgres service should be running. I used
-
-```
-brew services start postgresql@15
-```
+- Postgres service should be running. I used `brew services start postgresql@15`.
 
 ###### Deployment instructions
 
