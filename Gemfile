@@ -6,6 +6,9 @@ ruby "3.2.2"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.4", ">= 7.0.4.3"
 
+# ActiveJob was --skip-ed at generation time, but found to be needed later. Added back here.
+gem "activejob", "~> 7.0"
+
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 
@@ -74,5 +77,3 @@ end
 group :test do
   gem "database_cleaner-active_record"
 end
-
-gem "activejob", "~> 7.0"
