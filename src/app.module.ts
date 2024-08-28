@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DbModule } from './db/db.module';
-import { ScreenersModule } from './screeners/screeners.module';
-import { PatientResponsesModule } from './patient-responses/patient-responses.module';
+import { PostgresConfigModule } from './config/database/postgres/config.module';
+import { ScreenersModule } from './models/screeners/screeners.module';
+import { PatientResponsesModule } from './models/patient-responses/patient-responses.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -10,7 +10,7 @@ import { AppService } from './app.service';
   imports: [
     ConfigModule.forRoot(),
     ScreenersModule,
-    DbModule,
+    PostgresConfigModule,
     PatientResponsesModule,
   ],
   controllers: [AppController],
