@@ -7,30 +7,36 @@ import {
 } from 'typeorm';
 import { PatientResponse } from '../../patient-responses/entities/patient-response.entity';
 import { Content } from './content.entity';
+import { Mapping } from './mapping.entity';
 
-@Entity()
+@Entity('screeners')
 export class Screener {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false })
+  @Column({ type: 'varchar', nullable: false })
   name: string;
 
-  @Column({ nullable: false })
-  fullName: string;
+  @Column({ type: 'varchar', nullable: false })
+  full_name: string;
 
-  @Column({ nullable: false })
+  @Column({ type: 'varchar', nullable: false })
   disorder: string;
 
-  @Column('text')
-  description: string;
+  @OneToOne(() => Mapping, (mapping) => mapping.screener)
+  mapping: Mapping;
 
-  @OneToOne(() => Content, (content) => content.screener)
-  contents: Content;
+  @OneToOne(() => Content, (content) => content.screener, { eager: true })
+  content: Content;
 
   @OneToMany(
     () => PatientResponse,
-    (patientResponse) => patientResponse.screener,
+    (patient_response) => patient_response.screener,
+    { nullable: true },
   )
-  patientResponses: PatientResponse[];
+  patient_responses: PatientResponse[];
+
+  constructor(screener: Partial<Screener>) {
+    Object.assign(this, screener);
+  }
 }

@@ -5,7 +5,7 @@ export class CreateContents1724809472483 implements MigrationInterface {
     await queryRunner.query(`
           CREATE TABLE contents (
             id SERIAL PRIMARY KEY,
-            displayName VARCHAR(255) NOT NULL,
+            display_name VARCHAR(255) NOT NULL,
             screener_id INTEGER,
             FOREIGN KEY (screener_id) REFERENCES screeners(id)
           );

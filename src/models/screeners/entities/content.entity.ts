@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -8,17 +9,18 @@ import {
 import { Screener } from './screener.entity';
 import { Section } from './section.entity';
 
-@Entity()
+@Entity('contents')
 export class Content {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false })
-  displayName: string;
+  @Column({ type: 'varchar', nullable: false })
+  display_name: string;
 
-  @OneToOne(() => Screener, (screener) => screener.contents)
+  @OneToOne(() => Screener, (screener) => screener.content)
+  @JoinColumn({ name: 'screener_id' })
   screener: Screener;
 
-  @OneToMany(() => Section, (section) => section.content)
+  @OneToMany(() => Section, (section) => section.content, { eager: true })
   sections: Section[];
 }

@@ -1,26 +1,90 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePatientResponseDto } from './dto/create-patient-response.dto';
-import { UpdatePatientResponseDto } from './dto/update-patient-response.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { PatientResponse } from './entities/patient-response.entity';
+import { Mapping } from '../screeners/entities/mapping.entity';
 
 @Injectable()
 export class PatientResponsesService {
-  create(createPatientResponseDto: CreatePatientResponseDto) {
-    return 'This action adds a new response';
+  constructor(
+    @InjectRepository(PatientResponse)
+    private patientResponseRepository: Repository<PatientResponse>,
+    @InjectRepository(Mapping)
+    private mappingRepository: Repository<Mapping>,
+  ) {}
+
+  async create(createPatientResponseDto: CreatePatientResponseDto) {
+    const patientResponseData = await this.patientResponseRepository.create(
+      createPatientResponseDto,
+    );
+    console.log('patientResponseData in service', patientResponseData);
+
+    patientResponseData.answers = createPatientResponseDto.answers;
+
+    console.log('patientResponseData with answers', patientResponseData);
+
+    patientResponseData.recommendations = await this.getRecommendations(
+      createPatientResponseDto,
+    );
+
+    return await this.patientResponseRepository.save(patientResponseData);
   }
 
-  findAll() {
-    return `This action returns all responses`;
-  }
+  async getRecommendations(response: CreatePatientResponseDto) {
+    const patientScores = {
+      depression: 0,
+      mania: 0,
+      anxiety: 0,
+      substance_use: 0,
+    };
 
-  findOne(id: number) {
-    return `This action returns a #${id} response`;
-  }
+    const secondaryAssessments = [
+      {
+        domain: 'depression',
+        threshold: 2,
+        assessment: 'PHQ-9',
+      },
+      {
+        domain: 'mania',
+        threshold: 2,
+        assessment: 'ASRM',
+      },
+      {
+        domain: 'anxiety',
+        threshold: 2,
+        assessment: 'PHQ-9',
+      },
+      {
+        domain: 'substance_use',
+        threshold: 1,
+        assessment: 'ASSIST',
+      },
+    ];
 
-  update(id: number, updatePatientResponseDto: UpdatePatientResponseDto) {
-    return `This action updates a #${id} response`;
-  }
+    const mapping = await this.mappingRepository.findOne({
+      where: { id: +response.screener_id },
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} response`;
+    const scoringCategories = mapping.question_domains;
+
+    scoringCategories.forEach((category) => {
+      const questionResponse = response.answers.find(
+        (answer) => answer.question_id === category.question_id,
+      );
+      if (questionResponse) {
+        patientScores[category.domain] += questionResponse.value;
+      }
+    });
+
+    const recommendations = [];
+
+    secondaryAssessments.forEach((assessment) => {
+      if (patientScores[assessment.domain] >= assessment.threshold) {
+        recommendations.push(assessment.assessment);
+      }
+    });
+
+    return recommendations;
   }
 }

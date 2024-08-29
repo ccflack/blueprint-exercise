@@ -1,15 +1,21 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Content } from './content.entity';
 
-@Entity()
+@Entity('sections')
 export class Section {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false })
+  @Column({ type: 'varchar', nullable: false })
   type: string;
 
-  @Column({ nullable: false })
+  @Column({ type: 'varchar', nullable: false })
   title: string;
 
   @Column({ type: 'jsonb', nullable: false })
@@ -19,5 +25,6 @@ export class Section {
   questions: { question_id: string; title: string }[];
 
   @ManyToOne(() => Content, (content) => content.sections)
+  @JoinColumn({ name: 'content_id' })
   content: Content;
 }

@@ -5,10 +5,14 @@ export class CreateScreeners1724786204668 implements MigrationInterface {
     await queryRunner.query(`
           CREATE TABLE screeners (
             id SERIAL PRIMARY KEY,
-            name VARCHAR(255) NOT NULL
-            fullname VARCHAR(255) NOT NULL,
+            name VARCHAR(255) NOT NULL,
+            full_name VARCHAR(255) NOT NULL,
             disorder VARCHAR(255) NOT NULL,
             description TEXT,
+            content_id INTEGER,
+            mapping_id INTEGER,
+            FOREIGN KEY (content_id) REFERENCES contents(id),
+            FOREIGN KEY (mapping_id) REFERENCES mappings(id)
           );
         `);
   }

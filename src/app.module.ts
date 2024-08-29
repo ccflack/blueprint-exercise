@@ -1,16 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { PostgresConfigModule } from './config/database/postgres/config.module';
-import { ScreenersModule } from './models/screeners/screeners.module';
-import { PatientResponsesModule } from './models/patient-responses/patient-responses.module';
+
+import { DatabaseModule } from './config/database/postgres/database.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ScreenersModule } from './models/screeners/screeners.module';
+import { PatientResponsesModule } from './models/patient-responses/patient-responses.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    DatabaseModule,
     ScreenersModule,
-    PostgresConfigModule,
     PatientResponsesModule,
   ],
   controllers: [AppController],

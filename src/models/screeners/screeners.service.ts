@@ -1,26 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { CreateScreenerDto } from './dto/create-screener.dto';
-import { UpdateScreenerDto } from './dto/update-screener.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Screener } from './entities/screener.entity';
+import { Content } from './entities/content.entity';
+import { Mapping } from './entities/mapping.entity';
+import { Section } from './entities/section.entity';
 
 @Injectable()
 export class ScreenersService {
-  create(createScreenerDto: CreateScreenerDto) {
-    return 'This action adds a new screener';
-  }
+  constructor(
+    @InjectRepository(Screener)
+    private screenerRepository: Repository<Screener>,
+    @InjectRepository(Content)
+    private contentRepository: Repository<Content>,
+    @InjectRepository(Mapping)
+    private mappingRepository: Repository<Mapping>,
+    @InjectRepository(Section)
+    private sectionRepository: Repository<Section>,
+  ) {}
 
-  findAll() {
-    return `This action returns all screeners`;
-  }
+  async findOne(id: number) {
+    const screener = await this.screenerRepository.findOne({ where: { id } });
 
-  findOne(id: number) {
-    return `This action returns a #${id} screener`;
-  }
-
-  update(id: number, updateScreenerDto: UpdateScreenerDto) {
-    return `This action updates a #${id} screener`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} screener`;
+    return { screener };
   }
 }
