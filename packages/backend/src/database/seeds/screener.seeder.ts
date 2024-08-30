@@ -92,6 +92,6 @@ export default class ScreenerSeeder implements Seeder {
 
     console.log('Saving screener...');
     const screener = await repository.save(BPDS);
-    console.log('Screener saved with id:', screener.id);
+    console.log('Screener saved as:', screener);
   }
 }

@@ -23,4 +23,4 @@ RUN npm run build
 CMD ["npm", "run", "start:dev"]
 
 # Expose the port
-EXPOSE 3000
+EXPOSE 4000

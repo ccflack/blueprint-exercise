@@ -21,6 +21,9 @@ export class Content {
   @JoinColumn({ name: 'screener_id' })
   screener: Screener;
 
-  @OneToMany(() => Section, (section) => section.content, { eager: true })
+  @OneToMany(() => Section, (section) => section.content, {
+    cascade: true,
+    eager: true,
+  })
   sections: Section[];
 }

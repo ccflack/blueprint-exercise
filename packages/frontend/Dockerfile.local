@@ -1,0 +1,14 @@
+# Sepcify the base image
+FROM node:14-slim
+
+# Recommended labels
+LABEL Name=blueprint-frontend Version=0.0.1
+
+# Set the working directory
+WORKDIR /usr/src/app
+
+# Copy the frontend files
+COPY . .
+
+# Install the dependencies
+RUN npm install --silent

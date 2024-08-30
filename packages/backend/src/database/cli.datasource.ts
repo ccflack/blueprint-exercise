@@ -1,6 +1,8 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { SeederOptions } from 'typeorm-extension';
 
+// Passed manually to the CLI
+// See: npm run seed:run
 const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',
   logging: true,
@@ -11,7 +13,7 @@ const options: DataSourceOptions & SeederOptions = {
   database: process.env.POSTGRES_NAME,
   synchronize: process.env.DB_SYNC === 'true',
   entities: ['src/models/**/*.entity.ts'],
-  migrations: [__dirname + '/migrations/*{.ts,.js}'],
+  migrations: ['src/migrations/*{.ts,.js}'],
   seeds: ['src/database/seeds/**/*{.ts,.js}'],
 };
 

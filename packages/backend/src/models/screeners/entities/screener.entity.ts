@@ -26,7 +26,10 @@ export class Screener {
   @OneToOne(() => Mapping, (mapping) => mapping.screener)
   mapping: Mapping;
 
-  @OneToOne(() => Content, (content) => content.screener, { eager: true })
+  @OneToOne(() => Content, (content) => content.screener, {
+    cascade: true,
+    eager: true,
+  })
   content: Content;
 
   @OneToMany(
