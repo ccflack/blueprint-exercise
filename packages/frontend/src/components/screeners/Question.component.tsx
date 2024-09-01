@@ -2,6 +2,8 @@ import { useContext } from "react";
 import { ScreenerContext } from "../../context/screenerContext";
 import { ScreenerContextType } from "../../@types/screener";
 
+import { Box, Grid2, Typography } from "@mui/material";
+
 type QuestionProps = {
   currentSectionIndex: number;
   currentQuestionIndex: number;
@@ -15,9 +17,15 @@ function Question(props: QuestionProps) {
 
   return (
     <>
-      {<h3>{currentQuestion?.question_text}</h3>}
+      <Box mb={2}>
+        <Grid2 container justifyContent="center">
+          <Typography variant="body1">
+            {currentQuestion?.question_text}
+          </Typography>
+        </Grid2>
+      </Box>
     </>
   );
-}
+};
 
 export default Question;

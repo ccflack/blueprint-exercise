@@ -4,14 +4,14 @@ import { IPatientResponse } from "../@types/patientResponse";
 
 export const ScreenerContext = createContext<ScreenerContextType | null>(null);
 
-export const initialScreener = {
+const initialScreener = {
   screener_id: 0,
   name: '',
   full_name: '',
   sections: [],
 } as IScreener;
 
-export const initialPatientResponse = {
+const initialPatientResponse = {
   screener_id: 0,
   answers: []
 } as IPatientResponse;
@@ -20,7 +20,6 @@ const ScreenerProvider: FC<{children: ReactNode}> = ({children}) => {
   const [screener, setScreener] = useState<IScreener>(initialScreener);
   const [answerValue, setAnswerValue] = useState<number | null>(null);
   const [patientResponse, setPatientResponse] = useState<IPatientResponse>(initialPatientResponse);
-  const [results, setResults] = useState<string[]>([]);
 
   const appendPatientResponse = (question_id: string, value: number) => {
     if (screener.screener_id === 0) {
@@ -50,8 +49,6 @@ const ScreenerProvider: FC<{children: ReactNode}> = ({children}) => {
       patientResponse,
       setPatientResponse,
       appendPatientResponse,
-      results,
-      setResults,
     }}>
       {children}
     </ScreenerContext.Provider>

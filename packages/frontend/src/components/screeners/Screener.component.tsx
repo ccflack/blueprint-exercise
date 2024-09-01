@@ -2,18 +2,19 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-import { ScreenerContext, initialScreener, initialPatientResponse } from "../../context/screenerContext";
+import { ScreenerContext } from "../../context/screenerContext";
 import { ScreenerContextType } from "../../@types/screener";
 import Question from "./Question.component";
-import Answer from "./Answer.component";
+import Answers from "./Answers.component";
 import Review from "./Review.component";
+import { AppBar, Box, Button, Card, CardActions, CardContent, Chip, Divider, Grid2, Stack, Typography } from "@mui/material";
 function Screener() {
   const { id } = useParams<{id: string}>();
   const {
     screener,
     setScreener,
     answerValue,
-    setPatientResponse,
+    setAnswerValue,
     appendPatientResponse,
   } = useContext(ScreenerContext) as ScreenerContextType;
   const [currentSectionIndex, setCurrentSectionIndex] = useState<number>(0);
@@ -34,11 +35,7 @@ function Screener() {
       }
     }
     fetchScreener();
-    return () => {
-      setScreener(initialScreener);
-      setPatientResponse(initialPatientResponse)
-    }
-  }, [id]);
+  }, [id, setScreener]);
 
   // If loading is true, display a loading message.
   if (loading) {
@@ -49,6 +46,8 @@ function Screener() {
   if (!screener) {
     return <p>Not found</p>
   }
+
+  const questionCount = screener.sections.map(section => section.questions.length).reduce((acc, val) => acc + val, 0);
 
   const handleNext = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
@@ -70,40 +69,48 @@ function Screener() {
         currentSectionIndex === screener.sections.length - 1) {
           setScreenerComplete(true);
     }
+    setAnswerValue(null);
   }
 
   return (
     <>
-      <h3>{screener.full_name}</h3>
-      <h4>{screener.sections[currentSectionIndex].section_text}</h4>
       { screenerComplete ? (
-        <div>
-          <Review />
-        </div>
-       ) : (
-        <div>
-          <div>
+        <Review />
+      ) : (
+        <Card>
+          <CardContent>
+            <AppBar position="static">
+              <Grid2 container justifyContent="center">
+                <Typography variant="overline" component="div">
+                  {screener.full_name}
+                </Typography>
+              </Grid2>
+            </AppBar>
+            <Box m={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Typography gutterBottom variant="h6" component="div">
+                {screener.sections[currentSectionIndex].section_text}
+              </Typography>
+            </Box>
             <Question
               currentQuestionIndex={currentQuestionIndex}
               currentSectionIndex={currentSectionIndex}
             />
-            {
-              screener.sections[currentSectionIndex].answer_options.map((answer, index) => (
-                <Answer
-                  key={index}
-                  answer={answer}
-                  dataKey={index}
-                />
-              ))
-            }
-          </div>
-          <div>
-            <button onClick={handleNext}>
-              Next
-            </button>
-          </div>
-        </div>
-       )}
+            <Divider>
+              <Chip label={`${currentQuestionIndex + 1} / ${questionCount}`} size="small" />
+            </Divider>
+            <Box mt={2}>
+              <Answers answerOptions={screener.sections[currentSectionIndex].answer_options}/>
+            </Box>
+          </CardContent>
+          <Grid2 m={2} container justifyContent="center">
+            <CardActions>
+              <Button variant="outlined" onClick={handleNext}>
+                Next
+              </Button>
+            </CardActions>
+          </Grid2>
+        </Card>
+      )}
     </>
   );
 }

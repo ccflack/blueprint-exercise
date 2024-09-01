@@ -3,15 +3,17 @@ import { useNavigate } from "react-router-dom";
 
 import { ScreenerContext } from "../../context/screenerContext";
 import { ScreenerContextType } from "../../@types/screener";
+import { IAnswerOption } from "../../@types/answeOption";
 import axios from "axios";
+
+import { Box, Button, Card, CardActions, CardContent, Grid2, List, ListItem, Stack, Typography } from "@mui/material";
+import { IResult } from "../../@types/result";
 
 function Review() {
   const navigate = useNavigate();
   const {
     screener,
     patientResponse,
-    results,
-    setResults
   } = useContext(ScreenerContext) as ScreenerContextType;
   const [submitting, setSubmitting] = useState<boolean>(false);
 
@@ -19,51 +21,95 @@ function Review() {
 
   const submitPatientResponse = async () => {
     try {
-      const resultsData = await axios.post(`${baseURL}/patient-responses`, patientResponse);
-      setResults(resultsData.data);
+      await axios.post(`${baseURL}/patient-responses`, patientResponse).then((response) => {
+        setSubmitting(false);
+        navigate('/results', { replace: false, state: { results: response.data } });
+      });
     } catch (error) {
       console.log(error);
     }
   }
 
-  const matchResponse = (questionId: string) => {
+  const editQuestion = () => {
+    // I mocked up the UI for this review page, and like the way it looks, but this is not a requirement,
+    // so I'm leaving this as a placeholder for now. This is a nice-to-have feature that could be added.
+    alert('Not Implemented');
+  }
+
+  const matchResponse = (answerOptions: IAnswerOption[], questionId: string) => {
     if (!patientResponse) {
       throw new Error('Patient response is not set');
     }
 
     const answer = patientResponse.answers.find(answer => answer.question_id === questionId);
-    return answer?.value;
+    const answerOption = answerOptions.find(option => option.value === answer?.value);
+    return answerOption ? `(${answerOption?.value}) ${answerOption?.title}` : 'No response';
   }
 
   const handleSubmit = async (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     setSubmitting(true);
-    await submitPatientResponse();
-    setSubmitting(false);
-    navigate('/results', { replace: false, state: { results } });
+    submitPatientResponse();
   }
 
   return (
     <div>
-      <p>Thank you for completing the screener.</p>
-      <p>Review your responses below.</p>
-      {screener?.sections.map((section, sectionIndex) => (
-        <div key={sectionIndex}>
-          <h3>{section.section_text}</h3>
-          {section.questions.map((question, questionIndex) => (
-            <div key={questionIndex}>
-              <h4>{question.question_text}</h4>
-              <p>Your response: {matchResponse(question.question_id)}</p>
-            </div>
-          ))}
-        </div>
-      ))}
-      <p>Click the submit button to submit your responses.</p>
-      <button onClick={handleSubmit} disabled={submitting}>
-        { submitting ? "Submitting..." : "Submit" }
-      </button>
+      <Card>
+        <CardContent>
+          <Grid2 container justifyContent="center">
+            <Typography variant="h6" component="div">
+              Thanks for completing the {screener?.name} screener!
+            </Typography>
+          </Grid2>
+          <Grid2 spacing={2} container justifyContent="center">
+            <Typography variant="h6" component="div">
+              Here's how you responded:
+            </Typography>
+            {screener?.sections.map((section, sectionIndex) => (
+              <Box key={sectionIndex}>
+                <Typography variant="h6" component="div">
+                  {section.section_text}
+                </Typography>
+                <List dense>
+                {section.questions.map((question, questionIndex) => (
+                    <ListItem
+                      key={questionIndex}
+                      disablePadding
+                      dense
+                      divider
+                      secondaryAction={
+                        <Button variant="outlined" onClick={() => {editQuestion}}>
+                          Edit
+                        </Button>
+                      }
+                    >
+                      <Stack m={2} spacing={2} justifyContent="space-between">
+                        <Typography variant="body1" component="div">
+                          {question.question_text}
+                        </Typography>
+                        <Box>
+                          <Typography variant="body2" component="div">
+                            {matchResponse(section.answer_options, question.question_id)}
+                          </Typography>
+                        </Box>
+                      </Stack>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            ))}
+          </Grid2>
+        </CardContent>
+        <Grid2 m={2} container justifyContent="center">
+          <CardActions>
+            <Button variant="outlined" onClick={handleSubmit} disabled={submitting}>
+              { submitting ? "Submitting..." : "Submit" }
+            </Button>
+          </CardActions>
+        </Grid2>
+      </Card>
     </div>
   );
-}
+};
 
 export default Review;

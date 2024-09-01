@@ -6,20 +6,24 @@ import AboutPage from "./components/AboutPage.component";
 import ScreenerPage from "./components/ScreenerPage.component";
 import ResultsPage from './components/ResultsPage.component';
 import NoMatchPage from "./components/NoMatchPage.component";
-import './App.css'
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import theme from './styles/theme';
 
 function App() {
   return (
-    <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<WelcomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/screeners/:id" element={<ScreenerPage />} />
-        <Route path="/results" element={<ResultsPage />} />
-        <Route path="*" element={<NoMatchPage />} />
-      </Routes>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<WelcomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/screeners/:id" element={<ScreenerPage />} />
+          <Route path="/results" element={<ResultsPage />} />
+          <Route path="*" element={<NoMatchPage />} />
+        </Routes>
+      </Router>
+    </ThemeProvider>
   )
 }
 

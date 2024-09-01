@@ -77,7 +77,7 @@ export class PatientResponsesService {
 
     secondaryAssessments.forEach((assessment) => {
       if (patientScores[assessment.domain] >= assessment.threshold) {
-        recommendations.push(assessment.assessment);
+        recommendations.push({assessment: assessment.assessment});
       }
     });
 

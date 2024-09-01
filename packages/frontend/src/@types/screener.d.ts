@@ -1,7 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { IContent } from './content';
 import { IPatientResponse } from './patientResponse';
-import { IQuestion } from './question';
 import { ISection } from './section';
 
 export interface IScreener {
@@ -19,7 +17,4 @@ export type ScreenerContextType = {
   patientResponse: IPatientResponse | null;
   setPatientResponse: Dispatch<SetStateAction<IPatientResponse>>;
   appendPatientResponse: (question_id: string, value: number) => void;
-  results: string[];
-  setResults: Dispatch<SetStateAction<string[]>>;
 };
-

@@ -1,4 +1,4 @@
-import { IAnswer } from './answeOption';
+import { IAnswerOption } from './answeOption';
 import { IQuestion } from './question';
 
 export interface ISection {
@@ -6,4 +6,4 @@ export interface ISection {
   section_text: string;
   questions: IQuestion[];
   answer_options: IAnswerOption[];
-}
+};
