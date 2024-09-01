@@ -27,7 +27,9 @@ Handled by docker!
 
 ```bash
 # This is the test case for Part I of the exercise; I have not implemented full unit testing.
-$ npm run test -w
+
+cd packages/backend/
+npm run test -w
 ```
 
 ### Technologies
