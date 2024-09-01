@@ -6,12 +6,15 @@ This is a code exercise submitted for Blueprint, as detailed [here](https://gith
 
 This does assume docker is installed and running. See this [installation guide](https://docs.docker.com/desktop/install/mac-install/) if you don't already have it.
 
+These should be run separately. `build` must complete before the image can be brought `up`, and `up` needs to be running before we can `exec` on the image.
 ```bash
 docker compose build
-
+```
+```bash
 # -w if making changes. Enables watch mode, configured in docker.compose.yml
 docker compose up -w
-
+```
+```bash
 # You can detach from the above command, or run in a new terminal
 docker exec -it backend npm run seed:run
 ```
