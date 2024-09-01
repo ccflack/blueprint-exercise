@@ -7,7 +7,8 @@ import { ScreenerContextType } from "../../@types/screener";
 import Question from "./Question.component";
 import Answers from "./Answers.component";
 import Review from "./Review.component";
-import { AppBar, Box, Button, Card, CardActions, CardContent, Chip, Divider, Grid2, Stack, Typography } from "@mui/material";
+import { AppBar, Box, Button, Card, CardActions, CardContent, Chip, Divider, Grid2, LinearProgress, Typography } from "@mui/material";
+
 function Screener() {
   const { id } = useParams<{id: string}>();
   const {
@@ -48,6 +49,8 @@ function Screener() {
   }
 
   const questionCount = screener.sections.map(section => section.questions.length).reduce((acc, val) => acc + val, 0);
+  const progressText = `${currentQuestionIndex + 1} / ${questionCount}`;
+  const progress = (currentQuestionIndex + 1) / questionCount * 100;
 
   const handleNext = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
@@ -85,6 +88,7 @@ function Screener() {
                   {screener.full_name}
                 </Typography>
               </Grid2>
+              <LinearProgress variant="determinate" value={progress} />
             </AppBar>
             <Box m={2} sx={{ display: 'flex', justifyContent: 'center' }}>
               <Typography gutterBottom variant="h6" component="div">
@@ -96,7 +100,7 @@ function Screener() {
               currentSectionIndex={currentSectionIndex}
             />
             <Divider>
-              <Chip label={`${currentQuestionIndex + 1} / ${questionCount}`} size="small" />
+              <Chip label={progressText} size="small" />
             </Divider>
             <Box mt={2}>
               <Answers answerOptions={screener.sections[currentSectionIndex].answer_options}/>

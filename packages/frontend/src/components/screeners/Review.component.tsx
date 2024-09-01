@@ -7,7 +7,6 @@ import { IAnswerOption } from "../../@types/answeOption";
 import axios from "axios";
 
 import { Box, Button, Card, CardActions, CardContent, Grid2, List, ListItem, Stack, Typography } from "@mui/material";
-import { IResult } from "../../@types/result";
 
 function Review() {
   const navigate = useNavigate();
@@ -78,7 +77,7 @@ function Review() {
                       dense
                       divider
                       secondaryAction={
-                        <Button variant="outlined" onClick={() => {editQuestion}}>
+                        <Button variant="outlined" onClick={editQuestion}>
                           Edit
                         </Button>
                       }
