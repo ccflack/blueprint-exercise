@@ -18,12 +18,10 @@ Handled by docker!
 ## Run tests
 
 ```bash
-# unit tests (very limited)
+# This is the test case for Part I of the exercise; I have not implemented full unit testing.
 $ npm run test -w
 ```
 
-
-## Description
 ### Technologies
 
 I've completed this evaluation in the past using more familiar technologies, so the specifics of the exercise were fairly familiar. Because of this, I chose to use tools more alighned with Blueprint's current stack, both as a challenge and as a learning exercise.
@@ -42,13 +40,14 @@ This is not a deployment-ready container, though some of the resources I used to
 As I had no intention of deploying this or testing a live instance (I instead chose to explore containerization, containerized networks, etc.), I didn't add these layers to my own images.
 
 ### Production Ready?
+
 #### Code Functionality & Performance
 
 For better or worse, I used this as a learning experience for some new technologies. For this reason, there are some issues that get in the way of production-readiness. Probably most apparently, I don't have any of the experience that teaches best practices around code organization, idiomatic patterns, anti-patterns in Nest, TypeScript, etc.
 
 I tried to synthesize some of that knowledge by pulling from a wide variety of tutorials, official documentation, tech blogs, and other materials to counter this lack of personal experience.
 
-Typescript does a lot of work to prevent production code errors, so I'm _mostly comfortable with the functional resilience here. I would feel much more comfortable with more testing, but this would add more development time (and was not required, but worth calling out).
+Typescript does a lot of work to prevent production code errors, so I'm _mostly_ comfortable with the functional resilience here. I would feel much more comfortable automated testing in place, but this would add more development time (and was not required, but worth calling out).
 
 On performance: there's not too many steps here I don't trust, but some discussions worth having:
 
@@ -70,26 +69,26 @@ Basic, but serviceable. MaterialUI is doing a lot of the lifting here. I did div
 
 To be clear up front, this is not a field of expertise, but it is an area of interest. In most of my professional experience, I've been in one of two situations: (1) there's a dedicated DevOps/SRE element on the team, or (2) we're hosted on an AIO infrastructure-as-a-service tool like Heroku.
 
-In both scenarios, I've made it a point to learn "enough to be dangerous", and familiarize myself with service tooling and our team's infrastructure. I even pursued an AWS certificaiton at one point, but did not complete it, as my day-to-day duties really didn't require that knowledge to be exercised enough to make it feel worthwhile. Certainly a worthwhile exercise, but I have not, and would not be comfortable standing up and securing a production-scale, HIPAA-compliant application on my own, and speaking too much about it is likely to demonstrate that lack of knowledge.
+In both scenarios, I've made it a point to learn "enough to be dangerous", and familiarize myself with service tooling and our team's infrastructure. I pursued an AWS certificaiton at one point, but did not complete it, as my day-to-day duties really didn't require that knowledge to be exercised often enough to make it feel necessary. Certainly a worthwhile exercise, and a path I'd be willing to revisit if I found myself needing to be a point person this.
 
 With all of that said, there's some basic conversations to be had:
 
-On the code as-it-is:
-
-- One of the upsides to a containerized dev environment is the ability to closely match prod-like conditions. This should make troubleshooting, bug reproduction a fairly seamless process.
-- I saw enough of the docs for all tools available to know they have robust logging capabilities. Incorporating these into an observability tool like DataDog, NewRelic, etc. would also go a long way here.
-- Structurally, there is currently no endpoints exposing any user-submitted data, beyond the response returned on screener submission.
-
-On the framework and tooling:
-
-- As in the `Code Functionality & Performance` section here, there are no doubt many best practices and security needs specific to the Nest, React, and TypeScript that I'm sure I'm not currently aware of on a code level. I'm trusting the resources and documentation I used didn't let me down here, but I don't have this knowledge from experience.
-- Even at that, the "context" in which this feature currently sits should have the basics for modern web apps: authentication, standard app security features (CSRF, XSS, HTTPS, etc.). The only one of these I directly interfaced with was opening up CORS for the Dockerized network to talk across the apps. Production-ready code would do this via a whitelist, rather than fully-open.
-- Typescript is already validating types, but some more data validation and sanitization should also be in place. Handling all of these errors and communicating them gracefully would be another requirement before production deployment.
-- This is my first use of TypeORM, and I don't know what security features it includes, or how secure it is against SQL injection and other database vectors. As far as I know there's no raw SQL outside the migrations, but these vectors should be investigated.
-
 On availability, SRE:
 
-- Every deployment option has their own solution for this, and each are well-documented. While I'm not familiar with these tools as a matter of practice, I am familiar with the documentation, dashboards, and tooling in AWS, and would lean on those resources and docs, in the event that I need to gain that practical knowledge.
+- Every deployment option has their own solution for this, and each are well-documented. Load balancers, automatic scaling, and availability zones seem like reasonable first steps. I'm not familiar with the specific steps to enable these tools as a matter of practice, I am familiar with the documentation, dashboards, and tooling in AWS, Heroku, and others. I would lean on those resources and docs in the event that I need to brush up on that that practical knowledge.
+- I saw enough of the docs for the technologies I used here to know they have robust logging capabilities. Incorporating these into observability and monitoring tools like AWS Cloudwatch, DataDog, NewRelic, etc. would also go a long way here.
+- A combination of automated responses and alerts from both of the above points would ensure quick, seamless recovery from any issues.
+
+Security, on the code as-it-is:
+
+- One of the upsides to a containerized dev environment is the ability to closely match prod-like conditions. With some tweaks to the configuration to match whatever production deployment is used, this should make troubleshooting and bug reproduction quick and reliable.
+- Structurally, there are currently no endpoints exposing any user-submitted data, beyond the response returned on screener submission.
+
+Security, on the framework and tooling:
+
+- The "app context" in which this feature currently sits should get a pass for the standard security configurations. A good place to start is the [OWASP Top 10](https://owasp.org/www-project-top-ten/). I saw a number of these covered in the documentation and resources I worked through, and I'm comfortable enabling these features in other frameworks. The only one of these I directly interfaced with here was opening up CORS for the Dockerized network to talk across the apps. Production-ready code would enable this via a whitelist, rather than leaving it fully open.
+- Typescript is already validating types, but some more data validation and sanitization should also be in place. Handling all of these errors and communicating them gracefully would be another requirement before production deployment.
+- This is my first use of TypeORM, and I don't know what security features it includes, or how secure it is against SQL injection and other database vectors. As far as I know there's no raw SQL executed outside the migrations, but these vectors should be investigated.
 
 ## Stay in touch
 
