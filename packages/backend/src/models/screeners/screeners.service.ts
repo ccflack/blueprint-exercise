@@ -21,7 +21,27 @@ export class ScreenersService {
 
   async findOne(id: number) {
     const screener = await this.screenerRepository.findOne({ where: { id } });
+    const questionBattery = screener.content.sections.map(section => {
+      return {
+        section_id: section.id,
+        section_text: section.title,
+        answer_options: section.answers,
+        questions: section.questions.map(question => {
+          return {
+            question_id: question.question_id,
+            question_text: question.title,
+          }
+        })
+      }
+    });
 
-    return { screener };
+    const frontEndData = {
+      screener_id: screener.id,
+      name: screener.name,
+      full_name: screener.full_name,
+      sections: questionBattery
+    }
+
+    return { frontEndData };
   }
 }

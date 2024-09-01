@@ -1,26 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import Header from './components/Header.component';
+import WelcomePage from "./components/WelcomePage.component";
+import AboutPage from "./components/AboutPage.component";
+import ScreenerPage from "./components/ScreenerPage.component";
+import ResultsPage from './components/ResultsPage.component';
+import NoMatchPage from "./components/NoMatchPage.component";
+import './App.css'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<WelcomePage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/screeners/:id" element={<ScreenerPage />} />
+        <Route path="/results" element={<ResultsPage />} />
+        <Route path="*" element={<NoMatchPage />} />
+      </Routes>
+    </Router>
+  )
 }
 
-export default App;
+export default App

@@ -18,12 +18,8 @@ export class PatientResponsesService {
     const patientResponseData = await this.patientResponseRepository.create(
       createPatientResponseDto,
     );
-    console.log('patientResponseData in service', patientResponseData);
 
     patientResponseData.answers = createPatientResponseDto.answers;
-
-    console.log('patientResponseData with answers', patientResponseData);
-
     patientResponseData.recommendations = await this.getRecommendations(
       createPatientResponseDto,
     );

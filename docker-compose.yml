@@ -22,11 +22,19 @@ services:
     build:
       context: ./packages/backend
       dockerfile: Dockerfile.local
+    develop:
+      watch:
+        - action: sync
+          path: ./packages/backend
+          target: /svr/app
+          ignore:
+            - node_modules
+        - action: rebuild
+          path: package.json
     restart: always
     env_file: .env
     volumes:
       - ./packages/backend:/svr/app
-      - "./scripts/wait.sh:/wait.sh"
       - /svr/app/node_modules
     networks:
       - blueprint-network
@@ -42,6 +50,10 @@ services:
     build:
       context: ./packages/frontend
       dockerfile: Dockerfile.local
+    develop:
+      watch:
+        - action: rebuild
+          path: ./packages/frontend/package.json
     restart: always
     env_file: .env
     ports:
@@ -50,7 +62,6 @@ services:
       - "./packages/frontend/src:/usr/src/app/src"
     networks:
       - blueprint-network
-    command: "npm start"
 
 volumes:
   pgdata:

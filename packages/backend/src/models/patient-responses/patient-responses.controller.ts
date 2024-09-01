@@ -10,10 +10,6 @@ export class PatientResponsesController {
 
   @Post()
   async create(@Body() createPatientResponseDto: CreatePatientResponseDto) {
-    console.log(
-      'createPatientResponseDto in controller',
-      createPatientResponseDto,
-    );
     const createdPatientResponse = await this.patientResponsesService.create(
       createPatientResponseDto,
     );
