@@ -4,11 +4,16 @@ This is a code exercise submitted for Blueprint, as detailed [here](https://gith
 
 ## Project setup
 
+This does assume docker is installed and running. See this [installation guide](https://docs.docker.com/desktop/install/mac-install/) if you don't already have it.
+
 ```bash
 docker compose build
 
+# -w if making changes. Enables watch mode, configured in docker.compose.yml
 docker compose up -w
-# -w if making changes, enables watch mode, configured in docker.compose.yml
+
+# You can detach from the above command, or run in a new terminal
+docker exec -it backend npm run seed:run
 ```
 
 ## Compile and run the project
@@ -69,7 +74,7 @@ Basic, but serviceable. MaterialUI is doing a lot of the lifting here. I did div
 
 To be clear up front, this is not a field of expertise, but it is an area of interest. In most of my professional experience, I've been in one of two situations: (1) there's a dedicated DevOps/SRE element on the team, or (2) we're hosted on an AIO infrastructure-as-a-service tool like Heroku.
 
-In both scenarios, I've made it a point to learn "enough to be dangerous", and familiarize myself with service tooling and our team's infrastructure. I pursued an AWS certificaiton at one point, but did not complete it, as my day-to-day duties really didn't require that knowledge to be exercised often enough to make it feel necessary. Certainly a worthwhile exercise, and a path I'd be willing to revisit if I found myself needing to be a point person this.
+In both scenarios, I've made it a point to learn "enough to be dangerous", and familiarize myself with service tooling and our team's infrastructure. I worked through an AWS certification course, have worked on securing IAM policies after a security incident, and have done some light work in terraform and infrastructure-as-code.
 
 With all of that said, there's some basic conversations to be had:
 
