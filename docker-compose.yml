@@ -1,0 +1,71 @@
+services:
+  pg-db:
+    image: postgres:alpine
+    restart: always
+    container_name: pg-db
+    env_file:
+      - .env
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_NAME}
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - blueprint-network
+
+  backend:
+    container_name: backend
+    build:
+      context: ./packages/backend
+      dockerfile: Dockerfile.local
+    develop:
+      watch:
+        - action: sync
+          path: ./packages/backend
+          target: /svr/app
+          ignore:
+            - node_modules
+        - action: rebuild
+          path: package.json
+    restart: always
+    env_file: .env
+    volumes:
+      - ./packages/backend:/svr/app
+      - /svr/app/node_modules
+    networks:
+      - blueprint-network
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    depends_on:
+      - pg-db
+    links:
+      - pg-db
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./packages/frontend
+      dockerfile: Dockerfile.local
+    develop:
+      watch:
+        - action: rebuild
+          path: ./packages/frontend/package.json
+    restart: always
+    env_file: .env
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    volumes:
+      - "./packages/frontend/src:/usr/src/app/src"
+    networks:
+      - blueprint-network
+
+volumes:
+  pgdata:
+
+networks:
+  blueprint-network:
+    driver: bridge
