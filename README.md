@@ -32,6 +32,42 @@ cd packages/backend/
 npm run test -w
 ```
 
+### Description of Problem and Solution
+
+Because implementation may evolve with complexity, I've split the logic for Part 1 and Part 2 described in the original brief linked above.
+
+#### Part 1
+
+This is the code in the ApplicationController; A very basic version of the logic that will eventually power the backend of Part 2.
+
+This is relatively simple, accepting a data payload in the shape provided in the brief, matching those responses to values in the "grading" rubric, and then using those values to respond with recommended next steps.
+
+This is the logic being tested with the automated test command above.
+
+##### Part 2
+
+##### Back End
+
+The core of the logic is mostly the same here, but with a lot more meat built on around it. I started with the data model, matching table relations to the structure provided at the start of Part 2 in the brief.
+
+A few assumptions are made based on this provided structure:
+
+- Some parts of `screener` model and downstream relations should be interchangeable, such as a singular relation to `content`, multiple `sections` within that, so on for `answers` and `questions`.
+- Though the given example `id` is alphanumeric, the brief only describes a need for "a unique id"; if the database's generated `id` column is insufficient for this purpose, a `UUID` could be implemented.
+- Similar to the first point, `questions` and `answers` may be used in other chains-of-relation to be included in other screeners. If either of these are always uniqe to the screener in their combination and order, a json column could be used instead of the OneToMany relaiton.
+
+I'll mention it again below in tradeoffs and other thoughts, but the "grading rubric" and referral scores could have lived in the database as well, rather than hardcoded. These seemed static enough that they could live as constants in the codebase, as well, but that's an assumption.
+
+##### Front End
+
+The data structure described above seems sensible enough for storage and reference, but wasn't as intuitive for presentation to an end user. I reshaped this data to a `frontEndData` object, including a question battery that could be iterated through, a set of answers, and the relevant display data for the screener.
+
+This structure, together with a Context object made it much easier to track and iterate the current question, available answers, and store a constructed patient response.
+
+This response is sent to the PatientResponse controller, which behaves much like the logic in Part 1 (with the addition of storing the response), and returns an array for "next steps", that could link out to additional screeners, as they are added to the database.
+
+I tried to protect from missing or mis-shaped data in most cases; this is one of the areas where I'm not certain of the best practices for TS, and defaulted to simple returns (for expected, intermediate steps, loading states) or error throws (when data was missing in an unexpected way).
+
 ### Technologies
 
 I've completed this evaluation in the past using more familiar technologies, so the specifics of the exercise were fairly familiar. Because of this, I chose to use tools more alighned with Blueprint's current stack, both as a challenge and as a learning exercise.
